@@ -8,4 +8,6 @@ api.route(ROUTES.APPOINTMENTS.BY_ID)
     .put(appointmentHandler.bookAppointment)
     .delete(appointmentHandler.cancelAppointment);
 
+api.get(ROUTES.APPOINTMENTS.ALL, appointmentHandler.findAll);
+
 export default api;
