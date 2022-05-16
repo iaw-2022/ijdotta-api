@@ -12,7 +12,7 @@ const ROUTES = {
     },
     APPOINTMENTS: {
         ALL: '/appointments',
-        BY_ID: 'appointments/:id'
+        BY_ID: '/appointments/:id'
     }
 };
 
