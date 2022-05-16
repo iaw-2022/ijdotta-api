@@ -31,7 +31,7 @@ class AppointmentController {
     }
 
     async bookAppointment(appointment: AppointmentRequestType): Promise<appointments> {
-        if (findPatient(appointment.patient_id) == null) {
+        if (await findPatient(appointment.patient_id) == null) {
             throw new Error(`Patient with id ${appointment.patient_id} does not exist.`);
         }
 
