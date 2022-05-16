@@ -1,10 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
 import { PrismaClient, patients } from "@prisma/client";
 require('~/patch.js')
+import api from '~/api/index';
 
 let port = process.env.PORT || 3000;
 var app = express();
 const prisma = new PrismaClient();
+
+app.use(api);
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.send("Hello world!");
