@@ -10,3 +10,12 @@ export type AppointmentSearchRequestType = {
     to?: Date,
     free?: Boolean,
 }
+
+export type AppointmentResponseType = {
+    id: bigint,
+    doctor_id: bigint,
+    patient_id?: bigint | null,
+    date: Date,
+    initial_time: Date,
+    end_time: Date,
+}

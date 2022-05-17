@@ -1,4 +1,4 @@
-import { AppointmentRequestType, AppointmentSearchRequestType } from "~/types/appointment";
+import { AppointmentRequestType, AppointmentResponseType, AppointmentSearchRequestType } from "~/types/appointment";
 import database from "~/model/prisma";
 import { appointments, patients } from "@prisma/client";
 
@@ -12,19 +12,31 @@ const findPatient = async function(id: bigint): Promise<patients | null> {
 
 class AppointmentController {
 
-    async findAll(appointment: AppointmentSearchRequestType): Promise<Array<appointments>> {
+    async findAll(appointment: AppointmentSearchRequestType): Promise<Array<AppointmentResponseType>> {
         let where: any = {};
         const {doctor_id, patient_id, from, to, free} = appointment;
-        if (!!doctor_id) where.doctor_id = doctor_id;
-        if (!!patient_id) where.patient_id = patient_id;
-        if (!!from) where.date.gte = from;
-        if (!!to) where.date.lte = to;
-        if (free) where.patient_id = null;
+        if (doctor_id) where.doctor_id = doctor_id;
+        if (patient_id) where.patient_id = patient_id;
+        else if (free) where.patient_id = null;
+        if (from || to) {
+            where.date = {};
+            if (from) where.date.gte = from;
+            if (to) where.date.lte = to;
+        }
 
+        console.log('where: ');
         console.log(where);
 
-        const appointments = await database.appointments.findMany({
-            where
+        const appointments: AppointmentResponseType[] = await database.appointments.findMany({
+            select: {
+                id: true,
+                doctor_id: true,
+                patient_id: true,
+                date: true,
+                initial_time: true,
+                end_time: true,
+            },
+            where,
         });
 
         return appointments;
