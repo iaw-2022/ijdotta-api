@@ -1,11 +1,270 @@
 openapi: 3.0.0
+
 info:
   title: ClinicApp API
+  description: API for booking/cancelling clinic's appointments and geting patient's info.
   version: 1.0.0
+  
+servers:
+  - url: http://localhost:3000/
+
 paths:
   /appointments:
     get:
       description: return all the appointments
       responses:
         '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+  
+    parameters:
+      - in: query
+        name: doctor_id
+        schema:
+          type: integer
+        description: Filter appointments by doctor ID.
+      - in: query
+        name: patient_id
+        schema:
+          type: integer
+        description: Filter appointments by patient ID.
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date
+        description: Get appointments after some date.
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date
+        description: Get appointments before some date.
+      - in: query
+        name: free
+        schema:
+          type: boolean
+        description: Get free appointments.
+
+
+  /appointments/{id}:
+    put:
+      summary: Book an appointment.
+      description: Book the appointment with the given ID for the specified patient.
+      requestBody:
+        $ref: '#/components/requestBodies/PatientIdRequestBody'
+      responses:
+        '200':
+          description: OK. Appointment booked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+    
+    delete:
+      summary: Cancel an appointment.
+      description: Cancel the appointment with the given ID for the specified patient.
+      requestBody:
+        $ref: '#/components/requestBodies/PatientIdRequestBody'
+      responses:
+        '200':
+          description: OK. Appointment cancelled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+
+
+  /doctors/{id}:
+    get:
+      summary: Get a doctor.
+      description: Returns de doctor with the given ID.
+      responses:
+        '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponse"
+    
+    parameters:
+      - in: path
+        name: id
+        description: Doctor ID.
+        schema:
+          type: integer
+        required: true
+
+  /patient/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+        
+    get:
+      description: returns the patient matching the given ID
+      responses:
+        '200':
+          description: OK. Patient found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+    
+    
+  /patient/{id}/appointments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      description: returns all the appointments belonging to the patient with the given ID.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+
+  /patient/{id}/treatments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      description: returns all the treatments belonging to the patient with the given ID.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfWrappedTreatments'
+
+components:
+  parameters:
+    PatientIDParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    APIResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        payload:
+          oneOf:
+            - $ref: '#/components/schemas/PatientResponse'
+            - $ref: '#/components/schemas/AppointmentResponse'
+            - $ref: '#/components/schemas/ListOfAppointments'
+            - $ref: '#/components/schemas/DoctorResponse'
+
+
+    PatientResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        lastname:
+          type: string
+        health_insurance_company:
+          type: string
+        health_insurance_id:
+          type: string
+
+    AppointmentResponse:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        initial_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        doctor_id:
+          type: integer
+        patient_id:
+          type: integer
+
+    Treatment:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+
+    WrappedTreatments:
+      type: array
+      items:
+        type: object
+        properties:
+          date:
+            type: string
+            format: date
+          treatments:
+            type: array
+            items:
+              $ref: '#/components/schemas/Treatment'
+
+    DoctorResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        lastname:
+          type: string
+
+    ListOfAppointments:
+      type: array
+      items:
+        $ref: '#/components/schemas/AppointmentResponse'
+    
+    ListOfWrappedTreatments:
+      type: array
+      items:
+        $ref: '#/components/schemas/WrappedTreatments'
+        
+  requestBodies:
+    PatientIdRequestBody:
+      description: A JSON object containing the patient's id.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              patient_id:
+                type: integer
