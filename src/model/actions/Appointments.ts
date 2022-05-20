@@ -47,6 +47,15 @@ class AppointmentActions {
             throw new Error(`Patient with id ${appointment.patient_id} does not exist.`);
         }
 
+        const app = await database.appointments.findUnique({
+            where: {
+                id: appointment.appointment_id,
+            }
+        });
+        if (!!(app?.patient_id)) {
+            throw new Error(`Appointment with id ${appointment.appointment_id} is not free.`);
+        }
+
         const appointment_model = await database.appointments.update({
             where: {
                 id: appointment.appointment_id,
