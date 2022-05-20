@@ -6,6 +6,7 @@ import ROUTES from "~/constants/routes";
 import swaggerUI, { SwaggerOptions } from 'swagger-ui-express'
 import swaggerJSDoc from "swagger-jsdoc";
 import SWAGGER from "~/constants/swagger";
+import YAML from "yamljs";
 
 const router = Router();
 
@@ -25,11 +26,19 @@ router.use(parser);
         }
     },
     // apis: ['build/index.js']
-    apis: ["build/api/routes.*"]
+    apis: [
+        // "build/api/routes.*",
+        "build/api/swagger/swagger.yaml"]
 }
 
-const swaggerDocs = swaggerJSDoc(swaggerOptions);
-router.use(ROUTES.DOCS, swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+const swaggerDocument = YAML.load('build/api/swagger/swagger.yaml');
+// router.use(ROUTES.DOCS, swaggerUI.serve);
+// router.get(ROUTES.DOCS, swaggerUI.setup(swaggerDocument));
+
+// const swaggerDocs = swaggerJSDoc(swaggerOptions);
+// router.use(ROUTES.DOCS, swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+
+router.use(ROUTES.DOCS, swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 /**
  * API routes
