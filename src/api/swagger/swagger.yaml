@@ -7,6 +7,9 @@ info:
   
 servers:
   - url: http://localhost:3000/
+    description: local server (for dev)
+  - url: https://clinicapp-ijdotta-api.herokuapp.com/
+    description: Production server (uses live data)
 
 paths:
   /appointments:

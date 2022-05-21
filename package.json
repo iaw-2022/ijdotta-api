@@ -4,7 +4,7 @@
   "description": "API for the frontend of the clinic app",
   "main": "index.js",
   "scripts": {
-    "_copy-files": "copyfiles -e \"**/*.{js,ts,tsx,jsx,yaml}\" -u 1 --soft -V \"src/**/*\" build",
+    "_copy-files": "copyfiles -e \"**/*.{js,ts,tsx,jsx}\" -u 1 -V \"src/**/*\" build",
     "build": "tsc --project tsconfig.json && npm run _copy_files",
     "start": "link-module-alias && node -r dotenv/config ./build/index.js dotenv_config_path=./.env",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -18,6 +18,7 @@ class AppointmentActions {
         if (doctor_id) where.doctor_id = doctor_id;
         if (patient_id) where.patient_id = patient_id;
         else if (free) where.patient_id = null;
+        else where.patient_id = {not: undefined}
         if (from || to) {
             where.date = {};
             if (from) where.date.gte = from;
