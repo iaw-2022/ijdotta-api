@@ -1,4 +1,6 @@
 const ROUTES = {
+    DOCS: '/docs',
+
     PATIENT: {
         BY_ID: '/patients/:id',
         APPOINTMENTS: {
