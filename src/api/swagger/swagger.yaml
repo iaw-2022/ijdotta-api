@@ -14,7 +14,8 @@ servers:
 paths:
   /appointments:
     get:
-      description: return all the appointments
+      summary: Get all appointments.
+      description: Returns all the appointments matching the given (optional) filters.
       responses:
         '200':
           description: OK.
@@ -67,19 +68,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/AppointmentResponse'
     
-    # delete:
-    #   summary: Cancel an appointment.
-    #   description: Cancel the appointment with the given ID for the specified patient.
-    #   requestBody:
-    #     $ref: '#/components/requestBodies/PatientIdRequestBody'
-    #   responses:
-    #     '200':
-    #       description: OK. Appointment cancelled.
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: '#/components/schemas/AppointmentResponse'
-
     parameters:
       - in: path
         name: id
@@ -118,7 +106,8 @@ paths:
         required: true
         
     get:
-      description: returns the patient matching the given ID
+      summary: Get patient.
+      description: Returns the patient information matching the given ID
       responses:
         '200':
           description: OK. Patient found.
@@ -138,7 +127,8 @@ paths:
         required: true
 
     get:
-      description: returns all the appointments belonging to the patient with the given ID.
+      summary: Get patient's appointment.
+      description: Returns all the appointments belonging to the patient with the given ID.
       responses:
         '200':
           description: OK.
@@ -182,7 +172,8 @@ paths:
         required: true
 
     get:
-      description: returns all the treatments belonging to the patient with the given ID.
+      summary: Get patient's treatments.
+      description: Returns all the treatments belonging to the patient with the given ID.
       responses:
         '200':
           description: OK.
