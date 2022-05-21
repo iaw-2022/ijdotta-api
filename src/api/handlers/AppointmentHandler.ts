@@ -60,8 +60,10 @@ class AppointmentHandler {
     let result;
 
     try {
-      const appointment: AppointmentRequestType = req.body;
-      appointment.appointment_id = BigInt(req.params.id);
+      const appointment: AppointmentRequestType = {
+        patient_id: BigInt(req.params.id),
+        appointment_id: BigInt(req.params.appointment_id),
+      }
       // TODO validate
       result = appointmentController.cancelAppointment(appointment);
     } catch (error) {

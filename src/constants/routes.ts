@@ -5,7 +5,7 @@ const ROUTES = {
         BY_ID: '/patients/:id',
         APPOINTMENTS: {
             ALL: '/patients/:id/appointments',
-            BY_ID: '/patients/:id/appointments/:apppointment_id'
+            BY_ID: '/patients/:id/appointments/:appointment_id'
         },
         TREATMENTS: {
             ALL: '/patients/:id/treatments',
