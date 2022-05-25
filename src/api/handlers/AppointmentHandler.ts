@@ -47,7 +47,7 @@ class AppointmentHandler {
       appointment.appointment_id = BigInt(req.params.id);
       // TODO validate
       console.log(appointment);
-      result = appointmentController.bookAppointment(appointment);
+      result = await appointmentController.bookAppointment(appointment);
     } catch (error) {
       next(error);
       return false;
@@ -65,10 +65,10 @@ class AppointmentHandler {
         appointment_id: BigInt(req.params.appointment_id),
       }
       // TODO validate
-      result = appointmentController.cancelAppointment(appointment);
+      result = await appointmentController.cancelAppointment(appointment);
     } catch (error) {
       next(error);
-      return error;
+      return false;
     }
 
     apiUtils.sendResponse(res, result);
