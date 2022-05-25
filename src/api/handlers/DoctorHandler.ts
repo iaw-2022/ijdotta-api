@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import apiUtils from '~/api/utils';
 import doctorController from "~/controller/DoctorController";
 import { DoctorAppointmentsRequestType } from "~/types/doctor";
-
+import {noop} from 'lodash';
 class DoctorHandler {
 
     async getDoctors(req: Request, res: Response, next: NextFunction) {
+        noop(req);
         let result;
 
         try {

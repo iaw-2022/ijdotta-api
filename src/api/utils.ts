@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { noop } from 'lodash';
+import CodedError from "~/errors";
 
 type APIResponse = {
     success: boolean,
@@ -20,6 +22,9 @@ class APIUtils {
     }
 
     sendMethodNotFound(req: Request, res: Response, next: NextFunction): boolean {
+        noop(req);
+        noop(next);
+
         const response: APIResponse = {
             success: false,
             error: 'Method not found.',
@@ -32,11 +37,22 @@ class APIUtils {
     }
 
     handleError(err: Error, req: Request, res: Response, next: NextFunction): boolean {
+        noop(req);
+        noop(next);
+
         const response: APIResponse = {
             success: false,
             error: err.message,
         }
-        res.statusCode = 500;
+
+        let statusCode = 500;
+        try {
+            statusCode = err instanceof CodedError? err.statusCode : 500;
+        } catch (err) {
+           console.log(err);
+        }
+        
+        res.statusCode = statusCode;
         res.json(response);
         return false;
     }
