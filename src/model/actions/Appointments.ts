@@ -43,15 +43,19 @@ class AppointmentActions {
   }
 
   async bookAppointment(appointment: AppointmentRequestType): Promise<appointments> {
-    utils.checkPatientExists(appointment.patient_id);
-    utils.checkAppointmentIsFree(appointment.appointment_id);
-
-    const appointment_model = await database.appointments.update({
-      where: { id: appointment.appointment_id },
-      data: { patient_id: appointment.patient_id },
-    });
-
-    return appointment_model;
+    try {
+      await utils.checkPatientExists(appointment.patient_id);
+      await utils.checkAppointmentIsFree(appointment.appointment_id);
+  
+      const appointment_model = await database.appointments.update({
+        where: { id: appointment.appointment_id },
+        data: { patient_id: appointment.patient_id },
+      });
+  
+      return appointment_model;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async cancelAppointment(appointment: AppointmentRequestType): Promise<appointments | undefined> {
