@@ -9,10 +9,7 @@ class AppointmentHandler {
 
     try {
       console.log(req.query);
-      const query: Record<any, string | undefined> = req.query as Record<any, unknown> as Record<
-        any,
-        string | undefined
-      >;
+      const query: Record<any, string | undefined> = req.query as Record<any, unknown> as Record<any,string | undefined>;
       const { patient_id, doctor_id, from, to, free } = Object.assign(
         query,
         Object.keys(query).forEach((key) => {
