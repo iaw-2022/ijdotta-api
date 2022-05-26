@@ -13,16 +13,22 @@ class ModelUtils {
 
       return true;
     } catch (error) {
-      throw handleError(error);
+      handleError(error);
+      return false;
     }
   }
 
   async checkAppointmentExists(id: bigint): Promise<Boolean> {
-    const appointment = await database.appointments.findUnique({ where: { id } });
-    if (appointment == null) {
-      throw new CodedError('APPOINTMENT_NOT_FOUND', 404, `Appointment with id ${id} not found.`);
+    try {
+      const appointment = await database.appointments.findUnique({ where: { id } });
+      if (appointment == null) {
+        throw new CodedError('APPOINTMENT_NOT_FOUND', 404, `Appointment with id ${id} not found.`);
+      }
+      return true;
+    } catch (error) {
+      handleError(error);
+      return false;
     }
-    return true;
   }
 
   async checkAppointmentIsFree(id: bigint): Promise<Boolean> {
@@ -35,10 +41,11 @@ class ModelUtils {
       if (appointment.patient_id != null) {
         throw new CodedError('APPOINTMENT_NOT_FREE', 406, `Appointment with id ${id} is not free.`);
       }
-
+      
       return true;
     } catch (error) {
-      throw handleError(error);
+      handleError(error);
+      return false;
     }
   }
 
@@ -59,7 +66,8 @@ class ModelUtils {
 
       return true;
     } catch (error) {
-      throw handleError(error);
+      handleError(error);
+      return false;
     }
   }
 }
