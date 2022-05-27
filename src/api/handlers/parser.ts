@@ -50,7 +50,7 @@ const parseAppointmentSearchRequest = function (req: Request): AppointmentSearch
   }
 };
 
-const parseAppointmentRequest = function (req: Request): AppointmentRequestType {
+const parseAppointmentRequestWithBody = function (req: Request): AppointmentRequestType {
   try {
     const appointment: AppointmentRequestType = req.body;
     appointment.appointment_id = BigInt(req.params.id);
@@ -61,8 +61,20 @@ const parseAppointmentRequest = function (req: Request): AppointmentRequestType 
   }
 };
 
+const parseAppointmentRequestOnlyParams = function (req: Request): AppointmentRequestType {
+  try {
+    return {
+      patient_id: BigInt(req.params.id),
+      appointment_id: BigInt(req.params.appointment_id),
+    }
+  } catch (error: any) {
+    throw new CodedError('API_INVALID_PARAMS', 400, error.message);
+  }
+};
+
 export {
-  parseAppointmentRequest,
+  parseAppointmentRequestWithBody,
+  parseAppointmentRequestOnlyParams,
   parseAppointmentSearchRequest,
   parseDoctorRequest,
   parsePatientRequest,

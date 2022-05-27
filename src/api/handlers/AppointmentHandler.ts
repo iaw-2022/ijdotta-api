@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppointmentRequestType, AppointmentSearchRequestType } from '~/types/appointment';
 import appointmentController from '~/controller/AppointmentController';
 import apiUtils from '~/api/utils';
-import { parseAppointmentSearchRequest, parseAppointmentRequest } from './parser';
+import { parseAppointmentSearchRequest, parseAppointmentRequestOnlyParams, parseAppointmentRequestWithBody } from './parser';
 class AppointmentHandler {
   async findAll(req: Request, res: Response, next: NextFunction) {
     let result;
@@ -21,7 +21,7 @@ class AppointmentHandler {
     let result;
 
     try {
-      const appointment: AppointmentRequestType = parseAppointmentRequest(req);
+      const appointment: AppointmentRequestType = parseAppointmentRequestWithBody(req);
       result = await appointmentController.bookAppointment(appointment);
     } catch (error) {
       next(error);
@@ -35,7 +35,7 @@ class AppointmentHandler {
     let result;
 
     try {
-      const appointment: AppointmentRequestType = parseAppointmentRequest(req);
+      const appointment: AppointmentRequestType = parseAppointmentRequestOnlyParams(req);
       result = await appointmentController.cancelAppointment(appointment);
     } catch (error) {
       next(error);
