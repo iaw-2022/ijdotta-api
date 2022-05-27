@@ -12,7 +12,7 @@ class AppointmentController {
     return await appointments.findAll(appointment);
   }
 
-  async bookAppointment(appointment: AppointmentRequestType): Promise<AppointmentResponseType> {
+  async bookAppointment(appointment: AppointmentRequestType): Promise<AppointmentResponseType | undefined> {
     return await appointments.bookAppointment(appointment);
   }
 
