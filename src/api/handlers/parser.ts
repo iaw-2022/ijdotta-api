@@ -43,7 +43,7 @@ const parseAppointmentSearchRequest = function (req: Request): AppointmentSearch
       doctor_id: doctor_id ? BigInt(doctor_id) : undefined,
       from: from ? new Date(from) : undefined,
       to: to ? new Date(to) : undefined,
-      free: free ? Boolean(free) : undefined,
+      free: free === 'true',
     };
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);

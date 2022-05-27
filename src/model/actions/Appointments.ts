@@ -12,20 +12,18 @@ class AppointmentActions {
   async findAll(
     appointment: AppointmentSearchRequestType,
   ): Promise<Array<AppointmentResponseType>> {
+
     let where: any = {};
     const { doctor_id, patient_id, from, to, free } = appointment;
     if (doctor_id) where.doctor_id = doctor_id;
     if (patient_id) where.patient_id = patient_id;
     else if (free) where.patient_id = null;
-    else where.patient_id = { not: undefined };
+    else where.NOT = { patient_id: null };
     if (from || to) {
       where.date = {};
       if (from) where.date.gte = from;
       if (to) where.date.lte = to;
     }
-
-    console.log('where: ');
-    console.log(where);
 
     const appointments: AppointmentResponseType[] = await database.appointments.findMany({
       select: {
