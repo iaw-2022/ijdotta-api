@@ -14,6 +14,8 @@ servers:
 paths:
   /appointments:
     get:
+      tags:
+      - Appointments
       summary: Get all appointments.
       description: Returns all the appointments matching the given (optional) filters.
       responses:
@@ -58,6 +60,8 @@ paths:
     put:
       summary: Book an appointment.
       description: Book the appointment with the given ID for the specified patient.
+      tags:
+      - Appointments
       requestBody:
         $ref: '#/components/requestBodies/PatientIdRequestBody'
       responses:
@@ -66,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentResponse'
+                $ref: '#/components/schemas/Appointment'
     
     parameters:
       - in: path
@@ -80,13 +84,15 @@ paths:
     get:
       summary: Get a doctor.
       description: Returns de doctor with the given ID.
+      tags:
+      - Appointments
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/APIResponse"
+                $ref: "#/components/schemas/Doctor"
     
     parameters:
       - in: path
@@ -108,13 +114,15 @@ paths:
     get:
       summary: Get patient.
       description: Returns the patient information matching the given ID
+      tags:
+      - Patient profile
       responses:
         '200':
           description: OK. Patient found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PatientResponse'
+                $ref: '#/components/schemas/Patient'
     
     
   /patients/{id}/appointments:
@@ -129,6 +137,8 @@ paths:
     get:
       summary: Get patient's appointment.
       description: Returns all the appointments belonging to the patient with the given ID.
+      tags:
+      - Patient profile
       responses:
         '200':
           description: OK.
@@ -156,6 +166,8 @@ paths:
     delete:
       summary: Cancel an appointment.
       description: Cancels the appointment with the given ID if it is assigned to the given patient's ID.
+      tags:
+      - Appointments
       responses:
         '200':
           description: OK. Appointment successfully cancelled for the given patient.
@@ -174,13 +186,15 @@ paths:
     get:
       summary: Get patient's treatments.
       description: Returns all the treatments belonging to the patient with the given ID.
+      tags:
+      - Patient profile
       responses:
         '200':
           description: OK.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListOfWrappedTreatments'
+                $ref: '#/components/schemas/ListOfDateTreatments'
 
 components:
   parameters:
@@ -192,20 +206,18 @@ components:
         type: integer
 
   schemas:
-    APIResponse:
+
+    Doctor:
       type: object
       properties:
-        success:
-          type: boolean
-        payload:
-          oneOf:
-            - $ref: '#/components/schemas/PatientResponse'
-            - $ref: '#/components/schemas/AppointmentResponse'
-            - $ref: '#/components/schemas/ListOfAppointments'
-            - $ref: '#/components/schemas/DoctorResponse'
+        id:
+          type: integer
+        name: 
+          type: string
+        lastname:
+          type: string
 
-
-    PatientResponse:
+    Patient:
       type: object
       properties:
         id:
@@ -219,7 +231,7 @@ components:
         health_insurance_id:
           type: string
 
-    AppointmentResponse:
+    Appointment:
       type: object
       properties:
         date:
@@ -244,38 +256,26 @@ components:
         description:
           type: string
 
-    WrappedTreatments:
-      type: array
-      items:
-        type: object
-        properties:
-          date:
-            type: string
-            format: date
-          treatments:
-            type: array
-            items:
-              $ref: '#/components/schemas/Treatment'
-
-    DoctorResponse:
+    DateTreatments:
       type: object
       properties:
-        id:
-          type: integer
-        name: 
+        date:
           type: string
-        lastname:
-          type: string
+          format: date
+        treatments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Treatment'
 
+    ListOfDateTreatments:
+      type: array
+      items:
+        $ref: '#/components/schemas/DateTreatments'
+    
     ListOfAppointments:
       type: array
       items:
-        $ref: '#/components/schemas/AppointmentResponse'
-    
-    ListOfWrappedTreatments:
-      type: array
-      items:
-        $ref: '#/components/schemas/WrappedTreatments'
+        $ref: '#/components/schemas/Appointment'
         
   requestBodies:
     PatientIdRequestBody:
