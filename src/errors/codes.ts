@@ -1,0 +1,22 @@
+const ERROR_CODES = {
+
+    /**
+     * General
+     */
+    NOT_DEFINED: 'NOT_DEFINED',
+    API_INVALID_PARAMS: 'API_INVALID_PARAMS',
+
+    /**
+     * Patient
+     */
+    PATIENT_NOT_FOUND: 'PATIENT_NOT_FOUND',
+
+    /**
+     * Appointments
+     */
+    APPOINTMENT_NOT_FOUND: 'APPOINTMENT_NOT_FOUND',
+    APPOINTMENT_NOT_FREE: 'APPOINTMENT_NOT_FREE',
+    CANNOT_CANCEL_APPOINTMENT: 'CANNOT_CANCEL_APPOINTMENT',
+}
+
+export default ERROR_CODES;

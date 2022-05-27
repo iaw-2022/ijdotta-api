@@ -1,0 +1,289 @@
+openapi: 3.0.0
+
+info:
+  title: ClinicApp API
+  description: API for booking/cancelling clinic's appointments and geting patient's info.
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:3000/api
+    description: local server (for dev)
+  - url: https://clinicapp-ijdotta-api.herokuapp.com/
+    description: Production server (uses live data)
+
+paths:
+  /appointments:
+    get:
+      tags:
+      - Appointments
+      summary: Get all appointments.
+      description: Returns all the appointments matching the given (optional) filters.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+  
+    parameters:
+      - in: query
+        name: doctor_id
+        schema:
+          type: integer
+        description: Filter appointments by doctor ID.
+      - in: query
+        name: patient_id
+        schema:
+          type: integer
+        description: Filter appointments by patient ID.
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date
+        description: Get appointments after some date.
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date
+        description: Get appointments before some date.
+      - in: query
+        name: free
+        schema:
+          type: boolean
+        description: Get free appointments.
+
+
+  /appointments/{id}:
+    put:
+      summary: Book an appointment.
+      description: Book the appointment with the given ID for the specified patient.
+      tags:
+      - Appointments
+      requestBody:
+        $ref: '#/components/requestBodies/PatientIdRequestBody'
+      responses:
+        '200':
+          description: OK. Appointment booked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+    
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+
+
+  /doctors/{id}:
+    get:
+      summary: Get a doctor.
+      description: Returns de doctor with the given ID.
+      tags:
+      - Appointments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+    
+    parameters:
+      - in: path
+        name: id
+        description: Doctor ID.
+        schema:
+          type: integer
+        required: true
+
+  /patients/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+        
+    get:
+      summary: Get patient.
+      description: Returns the patient information matching the given ID
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: OK. Patient found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+    
+    
+  /patients/{id}/appointments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      summary: Get patient's appointment.
+      description: Returns all the appointments belonging to the patient with the given ID.
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+
+  /patients/{id}/appointments/{appointment_id}:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+      - in: path
+        name: appointment_id
+        description: Appointment's ID.
+        schema:
+          type: integer
+        required: true
+      
+    delete:
+      summary: Cancel an appointment.
+      description: Cancels the appointment with the given ID if it is assigned to the given patient's ID.
+      tags:
+      - Appointments
+      responses:
+        '200':
+          description: OK. Appointment successfully cancelled for the given patient.
+          
+
+
+  /patients/{id}/treatments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      summary: Get patient's treatments.
+      description: Returns all the treatments belonging to the patient with the given ID.
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfDateTreatments'
+
+components:
+  parameters:
+    PatientIDParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        lastname:
+          type: string
+
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        lastname:
+          type: string
+        health_insurance_company:
+          type: string
+        health_insurance_id:
+          type: string
+
+    Appointment:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        initial_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        doctor_id:
+          type: integer
+        patient_id:
+          type: integer
+
+    Treatment:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+
+    DateTreatments:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        treatments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Treatment'
+
+    ListOfDateTreatments:
+      type: array
+      items:
+        $ref: '#/components/schemas/DateTreatments'
+    
+    ListOfAppointments:
+      type: array
+      items:
+        $ref: '#/components/schemas/Appointment'
+        
+  requestBodies:
+    PatientIdRequestBody:
+      description: A JSON object containing the patient's id.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              patient_id:
+                type: integer
