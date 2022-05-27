@@ -2,23 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { noop } from 'lodash';
 import CodedError from "~/errors";
 
-type APIResponse = {
-    success: boolean,
-    payload?: unknown,
-    error?: string,
-    errorCode?: string,
+type APIError = {
+    errorCode: string,
+    error: string,
 }
 
 class APIUtils {
 
     sendResponse(res: Response, payload: unknown, status = 200): Boolean {
-        const response: APIResponse = {
-            success: true,
-            payload
-        };
-
-        res.statusCode = status;
-        res.json(response);
+        res.status(status).json(payload);
         return true;
     }
 
@@ -26,14 +18,12 @@ class APIUtils {
         noop(req);
         noop(next);
 
-        const response: APIResponse = {
-            success: false,
+        const response: APIError = {
+            errorCode: 'API_METHOD_NOT_FOUND',
             error: 'Method not found.',
         }
 
-        res.statusCode = 400;
-        res.json(response);
-
+        res.status(400).json(response);
         return true;
     }
 
@@ -41,14 +31,12 @@ class APIUtils {
         noop(req);
         noop(next);
 
-        const response: APIResponse = {
-            success: false,
+        const response: APIError = {
             errorCode: err.code,
             error: err.message,
         }
 
-        res.statusCode = err.statusCode;
-        res.json(response);
+        res.status(err.statusCode).json(response);
         return false;
     }
 
