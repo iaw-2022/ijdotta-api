@@ -8,6 +8,7 @@ class CodedError extends Error {
 
   constructor(code: keyof typeof CODES, statusCode = 500, message: string = '') {
     super(code);
+    this.code = code;
     this.statusCode = statusCode;
     this.message = message;
   }

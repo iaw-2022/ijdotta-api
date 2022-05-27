@@ -4,7 +4,7 @@ const ERROR_CODES = {
      * General
      */
     NOT_DEFINED: 'NOT_DEFINED',
-    INVALID_PARAMS: 'INVALID_PARAMS',
+    API_INVALID_PARAMS: 'API_INVALID_PARAMS',
 
     /**
      * Patient

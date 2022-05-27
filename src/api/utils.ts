@@ -6,6 +6,7 @@ type APIResponse = {
     success: boolean,
     payload?: unknown,
     error?: string,
+    errorCode?: string,
 }
 
 class APIUtils {
@@ -36,23 +37,17 @@ class APIUtils {
         return true;
     }
 
-    handleError(err: Error, req: Request, res: Response, next: NextFunction): boolean {
+    handleError(err: CodedError, req: Request, res: Response, next: NextFunction): boolean {
         noop(req);
         noop(next);
 
         const response: APIResponse = {
             success: false,
+            errorCode: err.code,
             error: err.message,
         }
 
-        let statusCode = 500;
-        try {
-            statusCode = err instanceof CodedError? err.statusCode : 500;
-        } catch (err) {
-           console.log(err);
-        }
-        
-        res.statusCode = statusCode;
+        res.statusCode = err.statusCode;
         res.json(response);
         return false;
     }
