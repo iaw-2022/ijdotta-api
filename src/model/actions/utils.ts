@@ -39,7 +39,7 @@ class ModelUtils {
       }
 
       if (appointment.patient_id != null) {
-        throw new CodedError('APPOINTMENT_NOT_FREE', 406, `Appointment with id ${id} is not free.`);
+        throw new CodedError('APPOINTMENT_NOT_FREE', 405, `Appointment with id ${id} is not free.`);
       }
       
       return true;

@@ -20,11 +20,15 @@ paths:
       description: Returns all the appointments matching the given (optional) filters.
       responses:
         '200':
-          description: OK.
+          description: Ok. Could search appointments.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListOfAppointments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        default:
+          $ref: "#/components/responses/Generic500Error"
   
     parameters:
       - in: query
@@ -71,6 +75,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Appointment'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        '405':
+          $ref: '#/components/responses/Generic405NotAllowed'
+        default:
+          $ref: "#/components/responses/Generic500Error"
     
     parameters:
       - in: path
@@ -88,11 +100,13 @@ paths:
       - Appointments
       responses:
         '200':
-          description: OK
+          description: Ok. Doctors found.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Doctor"
+        default:
+          $ref: "#/components/responses/Generic500Error"
     
     parameters:
       - in: path
@@ -113,7 +127,7 @@ paths:
         
     get:
       summary: Get patient.
-      description: Returns the patient information matching the given ID
+      description: Returns the patient information matching the given ID.
       tags:
       - Patient profile
       responses:
@@ -123,6 +137,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
     
     
   /patients/{id}/appointments:
@@ -135,7 +155,7 @@ paths:
         required: true
 
     get:
-      summary: Get patient's appointment.
+      summary: Get patient's appointments.
       description: Returns all the appointments belonging to the patient with the given ID.
       tags:
       - Patient profile
@@ -146,6 +166,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListOfAppointments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
 
   /patients/{id}/appointments/{appointment_id}:
     parameters:
@@ -171,7 +197,14 @@ paths:
       responses:
         '200':
           description: OK. Appointment successfully cancelled for the given patient.
-          
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '403':
+          $ref: "#/components/responses/Generic403Forbbiden"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"          
 
 
   /patients/{id}/treatments:
@@ -190,11 +223,17 @@ paths:
       - Patient profile
       responses:
         '200':
-          description: OK.
+          description: Ok. Found patient's treatments.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListOfDateTreatments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
 
 components:
   parameters:
@@ -276,6 +315,16 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Appointment'
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The error code.
+        error:
+          type: string
+          description: Message with useful information.
         
   requestBodies:
     PatientIdRequestBody:
@@ -287,3 +336,45 @@ components:
             properties:
               patient_id:
                 type: integer
+
+  responses:
+    Generic500Error:
+      description: Unknown error orcurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Generic400BadRequest:
+      description: Cannot proceed due to a client's error.\
+                   Maybe there is a problem with parameter's syntax.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic403Forbbiden:
+      description: You have not the access rights to modify this resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic404NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic405NotAllowed:
+      description: Requested method is not allowed for the given resources \
+                  Maybe you ar booking a non-free appointment.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+        
+    
+
+        
