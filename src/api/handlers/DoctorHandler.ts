@@ -3,6 +3,7 @@ import apiUtils from '~/api/utils';
 import doctorController from "~/controller/DoctorController";
 import { DoctorAppointmentsRequestType } from "~/types/doctor";
 import {noop} from 'lodash';
+import { parseDoctorRequest } from "./parser";
 class DoctorHandler {
 
     async getDoctors(req: Request, res: Response, next: NextFunction) {
@@ -23,10 +24,7 @@ class DoctorHandler {
         let result;
 
         try {
-            const doctor: DoctorAppointmentsRequestType = {
-                id: BigInt(req.params.id),
-            }
-
+            const doctor: DoctorAppointmentsRequestType = parseDoctorRequest(req);
             result = await doctorController.getAppointments(doctor);
         } catch (error) {
             next(error);
