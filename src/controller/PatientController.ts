@@ -1,17 +1,47 @@
 import { PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
 import patients from "~/model/actions/Patients";
 import { AppointmentResponseType } from "~/types/appointment";
+import CodedError from "~/errors";
+
+const checkAccessRights = async function(request: PatientRequestType, patient: PatientResponseType | undefined = undefined) {
+    try {
+        if (patient === undefined) {
+            patient = await patients.getProfile(request);
+        }
+        if (patient.email !== request.email) {
+            throw new CodedError("UNAUTHORIZED_ACTION", 403, `You have not permission to access pateint's ${request.patient_id} information.`);
+        }
+    } catch (error) {
+        throw error;   
+    }
+}
 class PatientController {
     async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {
-        return await patients.getProfile(patient);
+        try {
+            const patientInfo = await patients.getProfile(patient);
+            checkAccessRights(patient, patientInfo);
+            return patientInfo;
+        } catch (error) {
+            throw error
+        }
     }
 
     async getAppointments(patient: PatientRequestType): Promise<Array<AppointmentResponseType>> {
-        return await patients.getAppointments(patient);
+        try {
+            checkAccessRights(patient);
+            return await patients.getAppointments(patient);
+        } catch (error) {
+            throw error;
+        }
     }
 
     async getTreatments(patient: PatientRequestType): Promise<Array<TreatmentGroupType>> {
-        return await patients.getTreatments(patient);
+        try {
+            checkAccessRights(patient);
+            return await patients.getTreatments(patient);
+        } catch (error) {
+            throw error;
+        }
     }   
 }
 

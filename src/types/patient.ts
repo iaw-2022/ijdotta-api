@@ -1,5 +1,6 @@
 export type PatientRequestType = {
     patient_id: bigint,
+    email: string,
 }
 
 type NarrowTreatmentType = {

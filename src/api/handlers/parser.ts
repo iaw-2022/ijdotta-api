@@ -3,6 +3,7 @@ import CodedError from '~/errors';
 import { AppointmentRequestType, AppointmentSearchRequestType } from '~/types/appointment';
 import { DoctorAppointmentsRequestType } from '~/types/doctor';
 import { PatientRequestType } from '~/types/patient';
+import CONFIG from '~/config';
 
 const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestType {
   try {
@@ -18,6 +19,7 @@ const parsePatientRequest = function (req: Request): PatientRequestType {
   try {
     return {
       patient_id: BigInt(req.params.id),
+      email: req.body.auth[CONFIG.AUTH0.EMAIL_NAMESPACE]
     };
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
@@ -54,7 +56,6 @@ const parseAppointmentRequestWithBody = function (req: Request): AppointmentRequ
   try {
     const appointment: AppointmentRequestType = req.body;
     appointment.appointment_id = BigInt(req.params.id);
-
     return appointment;
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
