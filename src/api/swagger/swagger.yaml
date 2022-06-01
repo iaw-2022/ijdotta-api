@@ -393,7 +393,7 @@ components:
             $ref: "#/components/schemas/Error"
 
     Generic403Forbbiden:
-      description: You have not the access rights to modify this resource.
+      description: You do not have the access rights to modify this resource.
       content:
         application/json:
           schema:
