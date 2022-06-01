@@ -1,10 +1,23 @@
-import { PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
+import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
 import database from '~/model/prisma';
 import { AppointmentResponseType } from '~/types/appointment';
 import utils from './utils';
 import CodedError from '~/errors';
+import handleError from '../handleError';
 
 class PatientActions {
+  async createProfile(profile: PatientProfileRequestType): Promise<PatientResponseType | undefined> {
+    try {
+      await utils.checkPatientDoesntExist(profile.id);
+      const patient = database.patients.create({
+        data: profile
+      });
+      return patient;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
   async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {
 
     try {

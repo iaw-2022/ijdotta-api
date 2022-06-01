@@ -21,3 +21,5 @@ export type PatientResponseType = {
     health_insurance_company: string | null,
     health_insurance_id: string | null,
 }
+
+export type PatientProfileRequestType = PatientResponseType;

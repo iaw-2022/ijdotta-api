@@ -10,6 +10,7 @@ const ERROR_CODES = {
      * Patient
      */
     PATIENT_NOT_FOUND: 'PATIENT_NOT_FOUND',
+    PATIENT_ALREADY_EXISTS: 'PATIENT_ALREADY_EXISTS',
 
     /**
      * Appointments
