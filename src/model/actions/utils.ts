@@ -1,9 +1,10 @@
 import database from '../prisma';
 import { CodedError } from '~/errors';
 import handleError from '../handleError';
+import { patients } from '@prisma/client';
 
 class ModelUtils {
-  async checkPatientExists(id: bigint): Promise<Boolean> {
+  async checkPatientExists(id: bigint): Promise<patients | undefined> {
     try {
       const patient = await database.patients.findUnique({ where: { id } });
 
@@ -11,10 +12,9 @@ class ModelUtils {
         throw new CodedError('PATIENT_NOT_FOUND', 404, `Patient with id ${id} not found.`);
       }
 
-      return true;
+      return patient;
     } catch (error) {
       handleError(error);
-      return false;
     }
   }
 

@@ -26,6 +26,7 @@ class PatientController {
 
     async linkProfile(linkingRequest: PatientProfileLinkingRequest): Promise<PatientResponseType | undefined> {
         try {
+            checkAccessRights(linkingRequest);
             const verificationCode = await patients.getVerificationCode(linkingRequest);
             if (verificationCode !== linkingRequest.link_code) {
                 throw new CodedError('INVALID_LINK_CODE', 403, `Provided link code ${linkingRequest.link_code} does not match our records.`);

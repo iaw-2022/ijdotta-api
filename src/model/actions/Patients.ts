@@ -1,4 +1,4 @@
-import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
+import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
 import database from '~/model/prisma';
 import { AppointmentResponseType } from '~/types/appointment';
 import utils from './utils';
@@ -36,7 +36,12 @@ class PatientActions {
   }
 
   async getVerificationCode(patient: PatientRequestType): Promise<number | undefined> {
-    
+    try {
+      const patient_model = await utils.checkPatientExists(patient.patient_id);
+      return patient_model?.verification_code;
+    } catch (error) {
+      handleError(error);
+    }
   }
 
   async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {

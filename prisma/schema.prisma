@@ -90,6 +90,7 @@ model patients {
   health_insurance_id      String?        @db.VarChar(255)
   created_at               DateTime?      @db.Timestamp(0)
   updated_at               DateTime?      @db.Timestamp(0)
+  verification_code        Int            @default(838035) @db.UnsignedInt
   appointments             appointments[]
   stories                  stories[]
 }
