@@ -5,11 +5,20 @@ import apiUtils from "~/api/utils"
 import ROUTES from "~/constants/routes";
 import swaggerUI from 'swagger-ui-express'
 import YAML from "yamljs";
+import cors from 'cors';
 
 const router = Router();
 
+/**
+ * Utilities
+ */
 const parser = bodyParser.json();
 router.use(parser);
+
+/**
+ * Security
+ */
+router.use(cors());
 
 /**
  * Documentation
