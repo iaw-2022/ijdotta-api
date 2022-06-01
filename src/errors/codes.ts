@@ -24,6 +24,7 @@ const ERROR_CODES = {
      * Security
      */
     UNAUTHORIZED_ACTION: 'UNAUTHORIZED_ACTION',
+    API_REQUESTS_TOO_OFTEN: 'API_REQUESTS_TOO_OFTEN',
 }
 
 export default ERROR_CODES;

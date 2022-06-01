@@ -2,10 +2,13 @@ import bodyParser from "body-parser";
 import { Router } from "express";
 import routes from "./routes";
 import apiUtils from "~/api/utils"
-import ROUTES from "~/constants/routes";
+import CONST from "~/constants";
 import swaggerUI from 'swagger-ui-express'
 import YAML from "yamljs";
 import cors from 'cors';
+import { rateLimit } from "./security";
+
+const { ROUTES } = CONST;
 
 const router = Router();
 
@@ -19,6 +22,7 @@ router.use(parser);
  * Security
  */
 router.use(cors());
+router.use(rateLimit)
 
 /**
  * Documentation
