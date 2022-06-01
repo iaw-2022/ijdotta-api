@@ -92,10 +92,10 @@ paths:
         required: true
 
 
-  /doctors/{id}:
+  /doctors:
     get:
-      summary: Get a doctor.
-      description: Returns de doctor with the given ID.
+      summary: Get doctors.
+      description: Returns a list of doctors.
       tags:
       - Appointments
       responses:
@@ -104,17 +104,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Doctor"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
         default:
           $ref: "#/components/responses/Generic500Error"
-    
-    parameters:
-      - in: path
-        name: id
-        description: Doctor ID.
-        schema:
-          type: integer
-        required: true
 
   /patients:
     post:
