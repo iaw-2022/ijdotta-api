@@ -116,6 +116,24 @@ paths:
           type: integer
         required: true
 
+  /patients:
+    post:
+      summary: Create patient profile.
+      description: Creates a new patient profile in the database with the given parameters.
+      tags:
+        - Patient profile
+      responses:
+        '200': 
+          description: Ok. Patient profile successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
   /patients/{id}:
     parameters:
       - in: path
@@ -143,7 +161,6 @@ paths:
           $ref: "#/components/responses/Generic404NotFound"
         default:
           $ref: "#/components/responses/Generic500Error"
-    
     
   /patients/{id}/appointments:
     parameters:
@@ -262,6 +279,8 @@ components:
         id:
           type: integer
         name:
+          type: string
+        email:
           type: string
         lastname:
           type: string

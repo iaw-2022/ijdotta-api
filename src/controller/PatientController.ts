@@ -1,4 +1,4 @@
-import { PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
+import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
 import patients from "~/model/actions/Patients";
 import { AppointmentResponseType } from "~/types/appointment";
 import CodedError from "~/errors";
@@ -16,6 +16,14 @@ const checkAccessRights = async function(request: PatientRequestType, patient: P
     }
 }
 class PatientController {
+    async createProfile(profile: PatientProfileRequestType): Promise<PatientResponseType | undefined> {
+        try {
+            return await patients.createProfile(profile);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {
         try {
             const patientInfo = await patients.getProfile(patient);

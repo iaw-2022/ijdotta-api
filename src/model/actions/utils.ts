@@ -18,6 +18,21 @@ class ModelUtils {
     }
   }
 
+  async checkPatientDoesntExist(id: bigint): Promise<Boolean> {
+    try {
+      const patient = await database.patients.findUnique({ where: { id } });
+
+      if (patient !== null) {
+        throw new CodedError('PATIENT_ALREADY_EXISTS', 400, `Patient with id ${id} already exists.`);
+      }
+
+      return true;
+    } catch (error) {
+      handleError(error);
+      return false;
+    }
+  }
+
   async checkAppointmentExists(id: bigint): Promise<Boolean> {
     try {
       const appointment = await database.appointments.findUnique({ where: { id } });
