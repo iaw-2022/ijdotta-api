@@ -1,4 +1,4 @@
-import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
+import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from '~/types/patient';
 import database from '~/model/prisma';
 import { AppointmentResponseType } from '~/types/appointment';
 import utils from './utils';
@@ -16,6 +16,27 @@ class PatientActions {
     } catch (error) {
       handleError(error);
     }
+  }
+
+  async linkProfile(profileLink: PatientRequestType): Promise<PatientResponseType | undefined> {
+    try {
+      await utils.checkPatientExists(profileLink.patient_id);
+      const patient = database.patients.update({
+        where: {
+          id: profileLink.patient_id,
+        },
+        data: {
+          email: profileLink.email,
+        }
+      });
+      return patient;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  async getVerificationCode(patient: PatientRequestType): Promise<number | undefined> {
+    
   }
 
   async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {

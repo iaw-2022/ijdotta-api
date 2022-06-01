@@ -2,7 +2,7 @@ import { Request } from 'express';
 import CodedError from '~/errors';
 import { AppointmentRequestType, AppointmentSearchRequestType } from '~/types/appointment';
 import { DoctorAppointmentsRequestType } from '~/types/doctor';
-import { PatientProfileRequestType, PatientRequestType } from '~/types/patient';
+import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType } from '~/types/patient';
 import CONFIG from '~/config';
 
 const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestType {
@@ -39,6 +39,18 @@ const parsePatientCreateProfileRequest = function(req: Request): PatientProfileR
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
   }  
+}
+
+const parsePatientProfileLinkingRequest = function(req: Request): PatientProfileLinkingRequest {
+  try {
+    return {
+      patient_id: BigInt(req.params.id),
+      email: req.body.auth[CONFIG.AUTH0.EMAIL_NAMESPACE],
+      link_code: req.body.link_code,
+    }
+  } catch (error: any) {
+    throw new CodedError('API_INVALID_PARAMS', 400, error.message);
+  }
 }
 
 const parseAppointmentSearchRequest = function (req: Request): AppointmentSearchRequestType {
@@ -95,4 +107,5 @@ export {
   parseDoctorRequest,
   parsePatientRequest,
   parsePatientCreateProfileRequest,
+  parsePatientProfileLinkingRequest,
 };

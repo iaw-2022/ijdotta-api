@@ -4,6 +4,7 @@ const ROUTES = {
     PATIENT: {
         ALL: '/patients',
         BY_ID: '/patients/:id',
+        LINK_PROFILE: '/patients/:id/link-profile',
         APPOINTMENTS: {
             ALL: '/patients/:id/appointments',
             BY_ID: '/patients/:id/appointments/:appointment_id'
