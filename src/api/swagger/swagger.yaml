@@ -122,6 +122,8 @@ paths:
       description: Creates a new patient profile in the database with the given parameters.
       tags:
         - Patient profile
+      requestBody:
+        $ref: "#/components/requestBodies/PatientCreateProfile"
       responses:
         '200': 
           description: Ok. Patient profile successfully created.
@@ -163,11 +165,21 @@ paths:
           $ref: "#/components/responses/Generic500Error"
 
   /patients/{id}/link-profile:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+        
     put:
       summary: Link profile.
       description: Links the given patient profile to the provided email if the link code is valid.
       tags:
         - Patient profile
+      requestBody:
+        $ref: "#/components/requestBodies/PatientLinkProfile"
       responses:
         '200':
           description: Ok. Profile successfully linked.
@@ -374,6 +386,24 @@ components:
           schema:
             properties:
               patient_id:
+                type: integer
+
+    PatientCreateProfile:
+      description: A JSON object containing patient's information.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Patient"
+
+    PatientLinkProfile:
+      description: A JSON object containing link code.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              link_code: 
                 type: integer
 
   responses:
