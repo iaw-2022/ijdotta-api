@@ -21,10 +21,6 @@ const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestTyp
 
 const parsePatientRequest = function (req: Request): PatientRequestType {
   try {
-    console.log(req)
-    console.log(req.body)
-    console.log(req.body.auth);
-
     return {
       patient_id: BigInt(req.params.id),
       email: getAuthEmail(req),
@@ -88,8 +84,6 @@ const parseAppointmentRequestWithBody = function (req: Request): AppointmentRequ
 
 const parseAppointmentRequestOnlyParams = function (req: Request): AppointmentRequestType {
   try {
-    console.log(req.body)
-    console.log(req.body.auth)
     return {
       patient_id: BigInt(req.params.id),
       appointment_id: BigInt(req.params.appointment_id),
