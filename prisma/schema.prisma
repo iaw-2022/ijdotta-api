@@ -84,7 +84,6 @@ model patients {
   health_insurance_id      String?        @db.VarChar(255)
   created_at               DateTime?      @db.Timestamp(0)
   updated_at               DateTime?      @db.Timestamp(0)
-  verification_code        Int            @default(802741)
   appointments             appointments[]
   stories                  stories[]
 }

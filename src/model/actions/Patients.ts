@@ -10,18 +10,17 @@ class PatientActions {
     try {
       await utils.checkPatientDoesntExist(profile.id);
       const patient = database.patients.create({
-        data: profile
+        data: profile,
+        select: {
+          id: true,
+          name: true,
+          lastname: true,
+          email: true,
+          health_insurance_company: true,
+          health_insurance_id: true,
+        }
       });
       return patient;
-    } catch (error) {
-      handleError(error);
-    }
-  }
-
-  async getVerificationCode(patient: PatientRequestType): Promise<number | undefined> {
-    try {
-      const patient_model = await utils.checkPatientExists(patient.patient_id);
-      return patient_model?.verification_code;
     } catch (error) {
       handleError(error);
     }
