@@ -3,32 +3,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model appointment_patterns {
-  id                   BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
-  doctor_id            BigInt         @db.UnsignedBigInt
+  id                   BigInt         @id @default(autoincrement())
+  doctor_id            BigInt
   initial_date         DateTime       @db.Date
   end_date             DateTime       @db.Date
   initial_time         DateTime       @db.Time(0)
   end_time             DateTime       @db.Time(0)
   appointment_duration DateTime       @db.Time(0)
-  days                 Json
+  days                 Json           @db.Json
   created_at           DateTime?      @db.Timestamp(0)
   updated_at           DateTime?      @db.Timestamp(0)
   doctors              doctors        @relation(fields: [doctor_id], references: [id], onDelete: Cascade, map: "appointment_patterns_doctor_id_foreign")
   appointments         appointments[]
-
-  @@index([doctor_id], map: "appointment_patterns_doctor_id_foreign")
 }
 
 model appointments {
-  id                     BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
-  appointment_pattern_id BigInt               @default(0) @db.UnsignedBigInt
-  doctor_id              BigInt               @db.UnsignedBigInt
-  patient_id             BigInt?              @db.UnsignedBigInt
+  id                     BigInt               @id @default(autoincrement())
+  appointment_pattern_id BigInt               @default(0)
+  doctor_id              BigInt
+  patient_id             BigInt?
   date                   DateTime             @db.Date
   initial_time           DateTime             @db.Time(0)
   end_time               DateTime             @db.Time(0)
@@ -37,15 +35,11 @@ model appointments {
   appointment_patterns   appointment_patterns @relation(fields: [appointment_pattern_id], references: [id], onDelete: Cascade, map: "appointments_appointment_pattern_id_foreign")
   doctors                doctors              @relation(fields: [doctor_id], references: [id], onDelete: Cascade, map: "appointments_doctor_id_foreign")
   patients               patients?            @relation(fields: [patient_id], references: [id], onDelete: Cascade, map: "appointments_patient_id_foreign")
-
-  @@index([appointment_pattern_id], map: "appointments_appointment_pattern_id_foreign")
-  @@index([doctor_id], map: "appointments_doctor_id_foreign")
-  @@index([patient_id], map: "appointments_patient_id_foreign")
 }
 
 model doctors {
-  id                   BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
-  user_id              BigInt                 @db.UnsignedBigInt
+  id                   BigInt                 @id @default(autoincrement())
+  user_id              BigInt
   name                 String                 @db.VarChar(255)
   lastname             String                 @db.VarChar(255)
   created_at           DateTime?              @db.Timestamp(0)
@@ -56,17 +50,17 @@ model doctors {
 }
 
 model failed_jobs {
-  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  id         BigInt   @id @default(autoincrement())
   uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
-  connection String   @db.Text
-  queue      String   @db.Text
-  payload    String   @db.LongText
-  exception  String   @db.LongText
+  connection String
+  queue      String
+  payload    String
+  exception  String
   failed_at  DateTime @default(now()) @db.Timestamp(0)
 }
 
 model migrations {
-  id        Int    @id @default(autoincrement()) @db.UnsignedInt
+  id        Int    @id @default(autoincrement())
   migration String @db.VarChar(255)
   batch     Int
 }
@@ -82,7 +76,7 @@ model password_resets {
 }
 
 model patients {
-  id                       BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  id                       BigInt         @id @default(autoincrement())
   name                     String         @db.VarChar(255)
   lastname                 String         @db.VarChar(255)
   email                    String         @unique(map: "patients_email_unique") @db.VarChar(255)
@@ -90,18 +84,18 @@ model patients {
   health_insurance_id      String?        @db.VarChar(255)
   created_at               DateTime?      @db.Timestamp(0)
   updated_at               DateTime?      @db.Timestamp(0)
-  verification_code        Int            @default(838035) @db.UnsignedInt
+  verification_code        Int            @default(802741)
   appointments             appointments[]
   stories                  stories[]
 }
 
 model personal_access_tokens {
-  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  id             BigInt    @id @default(autoincrement())
   tokenable_type String    @db.VarChar(255)
-  tokenable_id   BigInt    @db.UnsignedBigInt
+  tokenable_id   BigInt
   name           String    @db.VarChar(255)
   token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
-  abilities      String?   @db.Text
+  abilities      String?
   last_used_at   DateTime? @db.Timestamp(0)
   created_at     DateTime? @db.Timestamp(0)
   updated_at     DateTime? @db.Timestamp(0)
@@ -110,7 +104,7 @@ model personal_access_tokens {
 }
 
 model roles {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  id         BigInt    @id @default(autoincrement())
   role       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
@@ -118,36 +112,31 @@ model roles {
 }
 
 model stories {
-  id          BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
-  patient_id  BigInt       @db.UnsignedBigInt
-  doctor_id   BigInt       @db.UnsignedBigInt
+  id          BigInt       @id @default(autoincrement())
+  patient_id  BigInt
+  doctor_id   BigInt
   date        DateTime     @db.Date
-  description String       @db.Text
+  description String
   created_at  DateTime?    @db.Timestamp(0)
   updated_at  DateTime?    @db.Timestamp(0)
   doctors     doctors      @relation(fields: [doctor_id], references: [id], map: "stories_doctor_id_foreign")
   patients    patients     @relation(fields: [patient_id], references: [id], onDelete: Cascade, map: "stories_patient_id_foreign")
   treatments  treatments[]
-
-  @@index([doctor_id], map: "stories_doctor_id_foreign")
-  @@index([patient_id], map: "stories_patient_id_foreign")
 }
 
 model treatments {
-  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  story_id    BigInt    @db.UnsignedBigInt
+  id          BigInt    @id @default(autoincrement())
+  story_id    BigInt
   title       String    @db.VarChar(255)
-  description String?   @db.Text
+  description String?
   created_at  DateTime? @db.Timestamp(0)
   updated_at  DateTime? @db.Timestamp(0)
   stories     stories   @relation(fields: [story_id], references: [id], onDelete: Cascade, map: "treatments_story_id_foreign")
-
-  @@index([story_id], map: "treatments_story_id_foreign")
 }
 
 model users {
-  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  role_id           BigInt    @default(3) @db.UnsignedBigInt
+  id                BigInt    @id @default(autoincrement())
+  role_id           BigInt    @default(3)
   name              String    @db.VarChar(255)
   email             String    @unique(map: "users_email_unique") @db.VarChar(255)
   email_verified_at DateTime? @db.Timestamp(0)
@@ -156,6 +145,4 @@ model users {
   created_at        DateTime? @db.Timestamp(0)
   updated_at        DateTime? @db.Timestamp(0)
   roles             roles     @relation(fields: [role_id], references: [id], map: "users_role_id_foreign")
-
-  @@index([role_id], map: "users_role_id_foreign")
 }
