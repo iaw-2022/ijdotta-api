@@ -28,7 +28,6 @@ class AppointmentActions {
         select: {
           id: true,
           doctor_id: true,
-          patient_id: true,
           date: true,
           initial_time: true,
           end_time: true,
