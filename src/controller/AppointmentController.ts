@@ -21,7 +21,7 @@ class AppointmentController {
     appointment: AppointmentRequestType,
   ): Promise<AppointmentResponseType | undefined> {
     try {
-      checkAccessRights(appointment)
+      await checkAccessRights(appointment)
       return await appointments.cancelAppointment(appointment);
     } catch (error) {
       throw error;

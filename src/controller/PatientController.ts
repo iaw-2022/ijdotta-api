@@ -14,7 +14,7 @@ class PatientController {
     async getProfile(patient: PatientRequestType): Promise<PatientResponseType> {
         try {
             const patientInfo = await patients.getProfile(patient);
-            checkAccessRights(patient, patientInfo);
+            await checkAccessRights(patient, patientInfo);
             return patientInfo;
         } catch (error) {
             throw error
@@ -23,7 +23,7 @@ class PatientController {
 
     async getAppointments(patient: PatientRequestType): Promise<Array<AppointmentResponseType>> {
         try {
-            checkAccessRights(patient);
+            await checkAccessRights(patient);
             return await patients.getAppointments(patient);
         } catch (error) {
             throw error;
@@ -32,7 +32,7 @@ class PatientController {
 
     async getTreatments(patient: PatientRequestType): Promise<Array<TreatmentGroupType>> {
         try {
-            checkAccessRights(patient);
+            await checkAccessRights(patient);
             return await patients.getTreatments(patient);
         } catch (error) {
             throw error;
