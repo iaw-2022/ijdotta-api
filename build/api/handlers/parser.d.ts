@@ -1,0 +1,11 @@
+import { Request } from 'express';
+import { AppointmentRequestType, AppointmentSearchRequestType } from '~/types/appointment';
+import { DoctorAppointmentsRequestType } from '~/types/doctor';
+import { PatientProfileRequestType, PatientRequestType } from '~/types/patient';
+declare const parseDoctorRequest: (req: Request) => DoctorAppointmentsRequestType;
+declare const parsePatientRequest: (req: Request) => PatientRequestType;
+declare const parsePatientCreateProfileRequest: (req: Request) => PatientProfileRequestType;
+declare const parseAppointmentSearchRequest: (req: Request) => AppointmentSearchRequestType;
+declare const parseAppointmentRequestWithBody: (req: Request) => AppointmentRequestType;
+declare const parseAppointmentRequestOnlyParams: (req: Request) => AppointmentRequestType;
+export { parseAppointmentRequestWithBody, parseAppointmentRequestOnlyParams, parseAppointmentSearchRequest, parseDoctorRequest, parsePatientRequest, parsePatientCreateProfileRequest, };
