@@ -10,7 +10,7 @@ const api = Router();
 /**
  * Appointments routes
  */
-api.put(ROUTES.APPOINTMENTS.BY_ID, checkJwt, appointmentHandler.bookAppointment)
+api.put(ROUTES.APPOINTMENTS.BY_ID, appointmentHandler.bookAppointment)
 api.get(ROUTES.APPOINTMENTS.ALL, appointmentHandler.findAll);
 
 /**
