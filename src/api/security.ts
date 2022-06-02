@@ -7,6 +7,7 @@ import ERROR_CODES from '~/errors/codes';
 const checkJwt = auth({
     audience: CONFIG.AUTH0.AUDIENCE,
     issuerBaseURL: CONFIG.AUTH0.ISSUER_BASE_URL,
+    tokenSigningAlg: CONFIG.AUTH0.ALGORITHM,
 });
 
 const rateError = () =>
