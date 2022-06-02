@@ -18,7 +18,6 @@ api.get(ROUTES.APPOINTMENTS.ALL, appointmentHandler.findAll);
  */
 api.get(ROUTES.PATIENT.BY_ID, checkJwt, patientHandler.getProfile);
 api.post(ROUTES.PATIENT.ALL, patientHandler.createProfile);
-api.put(ROUTES.PATIENT.LINK_PROFILE, patientHandler.linkProfile);
 api.get(ROUTES.PATIENT.APPOINTMENTS.ALL, checkJwt, patientHandler.getAppointments);
 api.get(ROUTES.PATIENT.TREATMENTS.ALL, checkJwt, patientHandler.getTreatments);
 api.delete(ROUTES.PATIENT.APPOINTMENTS.BY_ID, checkJwt, appointmentHandler.cancelAppointment)

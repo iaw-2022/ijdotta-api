@@ -158,36 +158,6 @@ paths:
         default:
           $ref: "#/components/responses/Generic500Error"
 
-  /patients/{id}/link-profile:
-    parameters:
-      - in: path
-        name: id
-        description: Patient's ID.
-        schema:
-          type: integer
-        required: true
-        
-    put:
-      summary: Link profile.
-      description: Links the given patient profile to the provided email if the link code is valid.
-      tags:
-        - Patient profile
-      requestBody:
-        $ref: "#/components/requestBodies/PatientLinkProfile"
-      responses:
-        '200':
-          description: Ok. Profile successfully linked.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Patient'
-        '400':
-          $ref: "#/components/responses/Generic400BadRequest"
-        '403':
-          $ref: "#/components/responses/Generic403Forbbiden"
-        default:
-          $ref: "#/components/responses/Generic500Error"
-    
   /patients/{id}/appointments:
     parameters:
       - in: path
@@ -389,16 +359,6 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Patient"
-
-    PatientLinkProfile:
-      description: A JSON object containing link code.
-      required: true
-      content:
-        application/json:
-          schema:
-            properties:
-              link_code: 
-                type: integer
 
   responses:
     Generic500Error:

@@ -3,10 +3,6 @@ export type PatientRequestType = {
     email: string,
 }
 
-export type PatientProfileLinkingRequest = PatientRequestType & {
-    link_code: number,
-}
-
 type NarrowTreatmentType = {
     title: string,
     description: string | null,

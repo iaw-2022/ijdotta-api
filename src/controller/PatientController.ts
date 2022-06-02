@@ -1,4 +1,4 @@
-import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
+import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
 import patients from "~/model/actions/Patients";
 import { AppointmentResponseType } from "~/types/appointment";
 import CodedError from "~/errors";
@@ -19,19 +19,6 @@ class PatientController {
     async createProfile(profile: PatientProfileRequestType): Promise<PatientResponseType | undefined> {
         try {
             return await patients.createProfile(profile);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async linkProfile(linkingRequest: PatientProfileLinkingRequest): Promise<PatientResponseType | undefined> {
-        try {
-            checkAccessRights(linkingRequest);
-            const verificationCode = await patients.getVerificationCode(linkingRequest);
-            if (verificationCode !== linkingRequest.link_code) {
-                throw new CodedError('INVALID_LINK_CODE', 403, `Provided link code ${linkingRequest.link_code} does not match our records.`);
-            }
-            return await patients.linkProfile(linkingRequest);
         } catch (error) {
             throw error;
         }

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import apiUtils from '~/api/utils';
-import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType } from '~/types/patient';
+import { PatientProfileRequestType, PatientRequestType } from '~/types/patient';
 import patientController from '~/controller/PatientController';
-import { parsePatientCreateProfileRequest, parsePatientProfileLinkingRequest, parsePatientRequest } from './parser';
+import { parsePatientCreateProfileRequest, parsePatientRequest } from './parser';
 
 class PatientHandler {
     async createProfile(req: Request, res: Response, next: NextFunction) {
@@ -13,17 +13,6 @@ class PatientHandler {
         } catch (error) {
             next(error);
             return false;
-        }
-        return apiUtils.sendResponse(res, result);
-    }
-
-    async linkProfile(req: Request, res: Response, next: NextFunction) {
-        let result;
-        try {
-            const profileLink: PatientProfileLinkingRequest = parsePatientProfileLinkingRequest(req);
-            result = await patientController.linkProfile(profileLink);
-        } catch (error) {
-            next(error);
         }
         return apiUtils.sendResponse(res, result);
     }

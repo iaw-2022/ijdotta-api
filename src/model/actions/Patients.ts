@@ -18,23 +18,6 @@ class PatientActions {
     }
   }
 
-  async linkProfile(profileLink: PatientRequestType): Promise<PatientResponseType | undefined> {
-    try {
-      await utils.checkPatientExists(profileLink.patient_id);
-      const patient = database.patients.update({
-        where: {
-          id: profileLink.patient_id,
-        },
-        data: {
-          email: profileLink.email,
-        }
-      });
-      return patient;
-    } catch (error) {
-      handleError(error);
-    }
-  }
-
   async getVerificationCode(patient: PatientRequestType): Promise<number | undefined> {
     try {
       const patient_model = await utils.checkPatientExists(patient.patient_id);

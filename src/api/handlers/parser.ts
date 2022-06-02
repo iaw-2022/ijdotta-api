@@ -2,7 +2,7 @@ import { Request } from 'express';
 import CodedError from '~/errors';
 import { AppointmentRequestType, AppointmentSearchRequestType } from '~/types/appointment';
 import { DoctorAppointmentsRequestType } from '~/types/doctor';
-import { PatientProfileLinkingRequest, PatientProfileRequestType, PatientRequestType } from '~/types/patient';
+import { PatientProfileRequestType, PatientRequestType } from '~/types/patient';
 import CONFIG from '~/config';
 
 const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestType {
@@ -17,9 +17,15 @@ const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestTyp
 
 const parsePatientRequest = function (req: Request): PatientRequestType {
   try {
+    console.log(req)
+    console.log(req.body)
+    console.log(req.body.auth);
+
+    const email = String(req.auth?.payload[CONFIG.AUTH0.EMAIL_NAMESPACE]);
+
     return {
       patient_id: BigInt(req.params.id),
-      email: req.body.auth[CONFIG.AUTH0.EMAIL_NAMESPACE]
+      email,
     };
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
@@ -39,18 +45,6 @@ const parsePatientCreateProfileRequest = function(req: Request): PatientProfileR
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
   }  
-}
-
-const parsePatientProfileLinkingRequest = function(req: Request): PatientProfileLinkingRequest {
-  try {
-    return {
-      patient_id: BigInt(req.params.id),
-      email: req.body.auth[CONFIG.AUTH0.EMAIL_NAMESPACE],
-      link_code: req.body.link_code,
-    }
-  } catch (error: any) {
-    throw new CodedError('API_INVALID_PARAMS', 400, error.message);
-  }
 }
 
 const parseAppointmentSearchRequest = function (req: Request): AppointmentSearchRequestType {
@@ -91,6 +85,8 @@ const parseAppointmentRequestWithBody = function (req: Request): AppointmentRequ
 
 const parseAppointmentRequestOnlyParams = function (req: Request): AppointmentRequestType {
   try {
+    console.log(req.body)
+    console.log(req.body.auth)
     return {
       patient_id: BigInt(req.params.id),
       appointment_id: BigInt(req.params.appointment_id),
@@ -107,5 +103,4 @@ export {
   parseDoctorRequest,
   parsePatientRequest,
   parsePatientCreateProfileRequest,
-  parsePatientProfileLinkingRequest,
 };
