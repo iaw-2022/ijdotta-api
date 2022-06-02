@@ -5,6 +5,10 @@ import { DoctorAppointmentsRequestType } from '~/types/doctor';
 import { PatientProfileRequestType, PatientRequestType } from '~/types/patient';
 import CONFIG from '~/config';
 
+const getAuthEmail = (req: Request) => {
+  return String(req.auth?.payload[CONFIG.AUTH0.EMAIL_NAMESPACE])
+}
+
 const parseDoctorRequest = function (req: Request): DoctorAppointmentsRequestType {
   try {
     return {
@@ -21,11 +25,9 @@ const parsePatientRequest = function (req: Request): PatientRequestType {
     console.log(req.body)
     console.log(req.body.auth);
 
-    const email = String(req.auth?.payload[CONFIG.AUTH0.EMAIL_NAMESPACE]);
-
     return {
       patient_id: BigInt(req.params.id),
-      email,
+      email: getAuthEmail(req),
     };
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
@@ -77,6 +79,7 @@ const parseAppointmentRequestWithBody = function (req: Request): AppointmentRequ
   try {
     const appointment: AppointmentRequestType = req.body;
     appointment.appointment_id = BigInt(req.params.id);
+    appointment.email = getAuthEmail(req);
     return appointment;
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
@@ -90,6 +93,7 @@ const parseAppointmentRequestOnlyParams = function (req: Request): AppointmentRe
     return {
       patient_id: BigInt(req.params.id),
       appointment_id: BigInt(req.params.appointment_id),
+      email: getAuthEmail(req),
     }
   } catch (error: any) {
     throw new CodedError('API_INVALID_PARAMS', 400, error.message);
