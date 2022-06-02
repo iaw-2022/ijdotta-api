@@ -45,7 +45,16 @@ Archivos:
 ## Funcionalidad provista por los endpoints
 Los endpoints permiten:
 - Consultar, reservar y cancelar turnos,
-- Crear, vincular y consultar el prefil de un paciente.
+- Consultar médicos,
+- Crear, vincular y consultar el prefil de un paciente:
+
+La dinámica consiste en recuperar una lista de turnos disponibles que pueden ser filtrados. Una vez indentificado el turno que se quiere reservar, se puede reservar para un paciente utilizando ese id y el id del paciente. Los turnos ya reservados pueden ser cancelados siempre que el paciente se haya indentificado en el sistema. En el caso de testear la API con Swagger UI, debería utilizarse el token del usuario asociado al paciente.
+
+Cuando se reserva un turno, si todavía no existe un paciente en el sistema con el id provisto, entonces se crea uno nuevo. Sin embargo, para poder acceder al perfil debe existir una cuenta de usuario en Auth0 con el mismo email; esta cuenta puede existir previamente o ser creada posteriormente.
+
+Se puede consultar la información, tratamientos y turnos de un paciente. Estas rutas están protegidas y requieren que el email asociado al token coincida con el email asociado al paciente.
+
+Cuando el perfil de paciente fue creado por un médico, el paciente puede luego crear una cuenta de usuario y vincularse al perfil utilizando el código de vinculación provisto. *Si el email de la cuenta de usuario coincide con el email registrado por el médico en el perfil del paciente, esta vinculación no sería necesaria. Pero si el email es diferente, el código permite vincular esa cuenta, actualizándolo.*
 
 ### Consultar turnos
 **GET /appointments** - Recuperar los turnos disponibles, pudiendo aplicar filtros: fecha, médico.
