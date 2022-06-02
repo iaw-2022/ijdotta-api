@@ -1,20 +1,7 @@
 import { PatientProfileRequestType, PatientRequestType, PatientResponseType, TreatmentGroupType } from "~/types/patient";
 import patients from "~/model/actions/Patients";
 import { AppointmentResponseType } from "~/types/appointment";
-import CodedError from "~/errors";
-
-const checkAccessRights = async function(request: PatientRequestType, patient: PatientResponseType | undefined = undefined) {
-    try {
-        if (patient === undefined) {
-            patient = await patients.getProfile(request);
-        }
-        if (patient.email !== request.email) {
-            throw new CodedError("UNAUTHORIZED_ACTION", 403, `You have not permission to access pateint's ${request.patient_id} information.`);
-        }
-    } catch (error) {
-        throw error;   
-    }
-}
+import { checkAccessRights } from "./utils";
 class PatientController {
     async createProfile(profile: PatientProfileRequestType): Promise<PatientResponseType | undefined> {
         try {

@@ -1,6 +1,7 @@
 export type AppointmentRequestType = {
     patient_id: bigint,
     appointment_id: bigint,
+    email: string,
 }
 
 export type AppointmentSearchRequestType = {

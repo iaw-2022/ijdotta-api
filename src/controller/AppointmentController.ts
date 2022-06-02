@@ -4,6 +4,7 @@ import {
   AppointmentSearchRequestType,
 } from '~/types/appointment';
 import appointments from '~/model/actions/Appointments';
+import { checkAccessRights } from './utils';
 
 class AppointmentController {
   async findAll(
@@ -20,6 +21,7 @@ class AppointmentController {
     appointment: AppointmentRequestType,
   ): Promise<AppointmentResponseType | undefined> {
     try {
+      checkAccessRights(appointment)
       return await appointments.cancelAppointment(appointment);
     } catch (error) {
       throw error;
