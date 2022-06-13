@@ -1,0 +1,413 @@
+openapi: 3.0.0
+
+info:
+  title: ClinicApp API
+  description: API for booking/cancelling clinic's appointments and geting patient's info.
+  version: 1.0.0
+  
+servers:
+  - url: https://clinicapp-ijdotta-api.herokuapp.com/api
+    description: Production server (uses live data)
+  - url: http://localhost:3000/api
+    description: local server (for dev)
+
+paths:
+  /appointments:
+    get:
+      tags:
+      - Appointments
+      summary: Get all appointments.
+      description: Returns all the appointments matching the given (optional) filters.
+      responses:
+        '200':
+          description: Ok. Could search appointments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+  
+    parameters:
+      - in: query
+        name: doctor_id
+        schema:
+          type: integer
+        description: Filter appointments by doctor ID.
+      - in: query
+        name: patient_id
+        schema:
+          type: integer
+        description: Filter appointments by patient ID.
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date
+        description: Get appointments after some date.
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date
+        description: Get appointments before some date.
+      - in: query
+        name: free
+        schema:
+          type: boolean
+        description: Get free appointments.
+
+
+  /appointments/{id}:
+    put:
+      summary: Book an appointment.
+      description: Book the appointment with the given ID for the specified patient.
+      tags:
+      - Appointments
+      requestBody:
+        $ref: '#/components/requestBodies/PatientIdRequestBody'
+      responses:
+        '200':
+          description: OK. Appointment booked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        '405':
+          $ref: '#/components/responses/Generic405NotAllowed'
+        default:
+          $ref: "#/components/responses/Generic500Error"
+    
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+
+
+  /doctors:
+    get:
+      summary: Get doctors.
+      description: Returns a list of doctors.
+      tags:
+      - Appointments
+      responses:
+        '200':
+          description: Ok. Doctors found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
+  /patients:
+    post:
+      summary: Create patient profile.
+      description: Creates a new patient profile in the database with the given parameters.
+      tags:
+        - Patient profile
+      requestBody:
+        $ref: "#/components/requestBodies/PatientCreateProfile"
+      responses:
+        '200': 
+          description: Ok. Patient profile successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
+  /patients/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+        
+    get:
+      summary: Get patient.
+      description: Returns the patient information matching the given ID.
+      security:
+      - bearerAuth: []
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: OK. Patient found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
+  /patients/{id}/appointments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      summary: Get patient's appointments.
+      description: Returns all the appointments belonging to the patient with the given ID.
+      security:
+      - bearerAuth: []
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfAppointments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
+  /patients/{id}/appointments/{appointment_id}:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+      - in: path
+        name: appointment_id
+        description: Appointment's ID.
+        schema:
+          type: integer
+        required: true
+      
+    delete:
+      summary: Cancel an appointment.
+      description: Cancels the appointment with the given ID if it is assigned to the given patient's ID.
+      tags:
+      - Appointments
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: OK. Appointment successfully cancelled for the given patient.
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '403':
+          $ref: "#/components/responses/Generic403Forbbiden"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"          
+
+
+  /patients/{id}/treatments:
+    parameters:
+      - in: path
+        name: id
+        description: Patient's ID.
+        schema:
+          type: integer
+        required: true
+
+    get:
+      summary: Get patient's treatments.
+      description: Returns all the treatments belonging to the patient with the given ID.
+      security:
+      - bearerAuth: []
+      tags:
+      - Patient profile
+      responses:
+        '200':
+          description: Ok. Found patient's treatments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfDateTreatments'
+        '400':
+          $ref: "#/components/responses/Generic400BadRequest"
+        '404':
+          $ref: "#/components/responses/Generic404NotFound"
+        default:
+          $ref: "#/components/responses/Generic500Error"
+
+components:
+  parameters:
+    PatientIDParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        lastname:
+          type: string
+
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        lastname:
+          type: string
+        health_insurance_company:
+          type: string
+        health_insurance_id:
+          type: string
+
+    Appointment:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        initial_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        doctor_id:
+          type: integer
+        patient_id:
+          type: integer
+
+    Treatment:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+
+    DateTreatments:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        treatments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Treatment'
+
+    ListOfDateTreatments:
+      type: array
+      items:
+        $ref: '#/components/schemas/DateTreatments'
+    
+    ListOfAppointments:
+      type: array
+      items:
+        $ref: '#/components/schemas/Appointment'
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The error code.
+        error:
+          type: string
+          description: Message with useful information.
+        
+  requestBodies:
+    PatientIdRequestBody:
+      description: A JSON object containing the patient's id.
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              patient_id:
+                type: integer
+
+    PatientCreateProfile:
+      description: A JSON object containing patient's information.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Patient"
+
+  responses:
+    Generic500Error:
+      description: Unknown error orcurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Generic400BadRequest:
+      description: Cannot proceed due to a client's error.\
+                   Maybe there is a problem with parameter's syntax.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic403Forbbiden:
+      description: You do not have the access rights to modify this resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic404NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Generic405NotAllowed:
+      description: Requested method is not allowed for the given resources \
+                  Maybe you ar booking a non-free appointment.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes

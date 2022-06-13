@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "API for the frontend of the clinic app",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "start": "node -r dotenv/config ./src/index.js dotenv_config_path=./.env",
+    "_copy-files": "copyfiles -e \"**/*.{js,ts,tsx,jsx}\" -u 1 -V \"src/**/*\" build",
+    "build": "tsc --project tsconfig.json && npm run _copy-files",
+    "start": "link-module-alias && node -r dotenv/config ./build/index.js dotenv_config_path=./.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +24,34 @@
   },
   "homepage": "https://github.com/iaw-2022/ijdotta-api#readme",
   "dependencies": {
+    "@prisma/client": "^3.14.0",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "express-oauth2-jwt-bearer": "^1.1.0",
+    "express-rate-limit": "^6.4.0",
+    "link-module-alias": "^1.2.0",
+    "lodash": "^4.17.21",
+    "lodash.noop": "^3.0.1",
+    "prisma": "^3.14.0",
+    "swagger-ui-express": "^4.4.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/lodash": "^4.14.182",
+    "@types/swagger-ui-express": "^4.1.3",
+    "@types/yamljs": "^0.2.31",
+    "copyfiles": "^2.4.1",
+    "typescript": "^4.6.4"
+  },
+  "files": [
+    "build/**/*"
+  ],
+  "_moduleAliases": {
+    "~": "build"
   }
 }
