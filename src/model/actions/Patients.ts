@@ -82,6 +82,34 @@ class PatientActions {
       throw error;
     }
   }
+
+  async getPatientId(email: string): Promise<bigint | undefined> {
+    try {
+      const result = await database.patients.findUnique({
+        where: {
+          email
+        },
+        select: {id: true}
+      })
+      return result?.id
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async checkPatientExists(id: bigint): Promise<boolean> {
+    try {
+      const result = await database.patients.findUnique({
+        where: {
+          id
+        }
+      });
+
+      return result !== null;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new PatientActions();

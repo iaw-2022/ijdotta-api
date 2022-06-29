@@ -21,6 +21,8 @@ api.post(ROUTES.PATIENT.ALL, patientHandler.createProfile);
 api.get(ROUTES.PATIENT.APPOINTMENTS.ALL, checkJwt, patientHandler.getAppointments);
 api.get(ROUTES.PATIENT.TREATMENTS.ALL, checkJwt, patientHandler.getTreatments);
 api.delete(ROUTES.PATIENT.APPOINTMENTS.BY_ID, checkJwt, appointmentHandler.cancelAppointment)
+api.get(ROUTES.PATIENT.EXISTS, patientHandler.checkPatientExists)
+api.get(ROUTES.PATIENT.GET_ID, patientHandler.getPatientId)
 
 /**
  * Doctors routes
