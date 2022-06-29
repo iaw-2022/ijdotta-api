@@ -3,7 +3,9 @@ const ROUTES = {
 
     PATIENT: {
         ALL: '/patients',
+        GET_ID: '/patients/:email/id',
         BY_ID: '/patients/:id',
+        EXISTS: '/patients/:id/exists',
         LINK_PROFILE: '/patients/:id/link-profile',
         APPOINTMENTS: {
             ALL: '/patients/:id/appointments',

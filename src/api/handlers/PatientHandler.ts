@@ -52,6 +52,31 @@ class PatientHandler {
         }
         return apiUtils.sendResponse(res, result);
     }
+
+    async getPatientId(req: Request, res: Response, next: NextFunction) {
+        let result;
+
+        try {
+            const email : string = String(req.params.email);
+            const id = await patientController.getPatientId(email);
+            result = {id}
+        } catch (error) {
+            next(error);
+        }
+        apiUtils.sendResponse(res, result);
+    }
+
+    async checkPatientExists(req: Request, res: Response, next: NextFunction) {
+        let result;
+        try {
+            const patientId: bigint = BigInt(req.params.id);
+            const exists = await patientController.checkPatientExistes(patientId);
+            result = {exists}
+        } catch (error) {
+            next(error);
+        }
+        apiUtils.sendResponse(res, result);
+    }
 }
 
 export default new PatientHandler();
