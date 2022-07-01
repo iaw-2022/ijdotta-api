@@ -14,7 +14,7 @@ model appointment_patterns {
   end_date             DateTime       @db.Date
   initial_time         DateTime       @db.Time(0)
   end_time             DateTime       @db.Time(0)
-  appointment_duration DateTime       @db.Time(0)
+  appointment_duration Int
   days                 Json           @db.Json
   created_at           DateTime?      @db.Timestamp(0)
   updated_at           DateTime?      @db.Timestamp(0)
